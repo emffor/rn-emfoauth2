@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
@@ -14,7 +14,26 @@ type Params = {
   token: string;
 }
 
+type Profile = {
+  email: string;
+  name: string;
+  family_name: string;
+  given_name: string;
+  locale: string;
+  picture: string;
+}
+
+// useEffect buscar os dados do usuário quando for carregado.
+// useState para armazenar os dados de um usuário em um estado para poder compartilhar.
+
 export function Profile() {
+  
+  // useState para armazenar os dados de um usuário em um estado para poder compartilhar.
+  //usar o type Profile no estado.
+  //Vou falar que ele é um objeto vazio do type profile
+  const [profile, setProfile] = useState({} as Profile);
+
+
   //useRoute está dentro do @react-navigation/native //com ele acessa informações do token passado.
   const navigation = useNavigation();
   const route = useRoute();
@@ -30,6 +49,22 @@ export function Profile() {
     navigation.navigate('SignIn');
   }
 
+  //roda da etapa 3 do Google Developers Request URI
+  //tem que colocar o token depois de ? 
+  async function loadProfile(){
+    const response = fetch(`https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${token}`);
+    //em cima vai devolver uma resposta
+    const userInfo = await (await response).json();
+    setProfile(userInfo);
+    console.log("### USUARIO ###");
+    console.log(userInfo ); 
+  }
+
+  // useEffect buscar os dados do usuário quando for carregado.
+  useEffect(() => {
+    loadProfile();
+  },[])
+
   return (
     <View style={styles.container}>
       <ProfileHeader />
@@ -37,17 +72,17 @@ export function Profile() {
       <View style={styles.content}>
         <View style={styles.profile}>
           <Avatar
-            source={{ uri: 'https://github.com/emffor.png' }}
+            source={{ uri: profile.picture }}
           />
 
           <Text style={styles.name}>
-            Eloan Ferreira
+            {profile.name}
           </Text>
 
           <View style={styles.email}>
             <Feather name="mail" color={theme.colors.secondary} size={18} />
             <Text style={styles.emailText}>
-                emfeloan@gmail.com
+                {profile.email}
             </Text>
           </View>
         </View>
@@ -63,7 +98,7 @@ export function Profile() {
               First name
             </Text>
             <Text style={styles.text}>
-              Eloan
+              {profile.given_name}
             </Text>
           </View>
 
@@ -77,7 +112,7 @@ export function Profile() {
               Last name
             </Text>
             <Text style={styles.text}>
-              Ferreira
+              {profile.family_name}
             </Text>
           </View>
         </View>
@@ -90,7 +125,7 @@ export function Profile() {
           />
 
           <Text style={styles.localeText}>
-            User profile location: Brazil
+            User profile location: {profile.locale}
           </Text>
         </View>
 
