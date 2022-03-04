@@ -36,12 +36,17 @@ export function SignIn() {
 
     //desestruturando
     //O retorno dele é conforme um AuthResponse
-    const { type, params } = await AuthSession.startAsync({ authUrl }) as AuthResponse;
-   
+    const { type, params } = await AuthSession
+    .startAsync({ authUrl }) as AuthResponse;
+    // console.log('type: ' + type);
+    // console.log('token: ' + params.access_token);
     //se type é sucess redirecionara para tela de profile.
-    if ( type === 'sucesss'){         //mandando uma informação para outra tela.
-      navigation.navigate('Profile', { token: params.access_token });
-    }
+           //mandando uma informação para outra tela.
+      if (type === 'success') {
+        navigation.navigate('Profile', { token: params.access_token });
+      }
+      
+
 
     
   }

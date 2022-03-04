@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 
 import { ProfileHeader } from '../../components/ProfileHeader';
@@ -10,8 +10,21 @@ import { Button } from '../../components/Button';
 import { styles } from './styles';
 import { theme } from '../../styles/theme';
 
+type Params = {
+  token: string;
+}
+
 export function Profile() {
+  //useRoute está dentro do @react-navigation/native //com ele acessa informações do token passado.
   const navigation = useNavigation();
+  const route = useRoute();
+
+  //Acessar dentro de route.params tem que tipar, token: string; 
+  //route.params é conforme esse tipo (as Params);
+  const { token } = route.params as Params;
+  //precisa do token para buscar informações do usuário.
+  console.log('Token tela Profile: ' + token);
+  
 
   async function handleLogout() {
     navigation.navigate('SignIn');
