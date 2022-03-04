@@ -6,6 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/Button';
 import { SignInContent } from '../../components/SignInContent';
 
+//Exportando as variáveis de .env
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
+
 import { styles } from './styles';
 
 //Quero o params e uma informação de sucesso.
@@ -23,8 +27,9 @@ export function SignIn() {
 
   async function handleSignIn() {
     //params
-    const CLIENT_ID = '662328926738-h03s3ieamggdr7s98qmhe8s34tfrn2pl.apps.googleusercontent.com';
-    const REDIRECT_URI = 'https://auth.expo.io/@eloanmf/rn-emfoauth2';
+    //INFORMAÇÕES SENSÍVEIS TEM QUE INSTALAR O: yarn add dotenv babel-plugin-inline-dotenv - foi colocada em arquivo .env
+    // const CLIENT_ID = '662328926738-h03s3ieamggdr7s98qmhe8s34tfrn2pl.apps.googleusercontent.com';
+    // const REDIRECT_URI = 'https://auth.expo.io/@eloanmf/rn-emfoauth2';
     const RESPONSE_TYPE = 'token';
     const SCOPE = encodeURI('profile email'); //encodeURI - recurso envolve a string - substitui o espaço entre os dois. 
 
