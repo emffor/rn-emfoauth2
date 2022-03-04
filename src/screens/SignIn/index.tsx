@@ -8,12 +8,15 @@ import { SignInContent } from '../../components/SignInContent';
 
 import { styles } from './styles';
 
-// type AuthResponse = {
-//   type: string;
-//   params: {
-//     access_token: string;
-//   }
-// }
+//Quero o params e uma informação de sucesso.
+ type AuthResponse = {
+   //type usado para receber a msg de sucesso.
+   type: string;
+   //Dentro do Params quero o acesso token que pego no terminal.
+   params: {
+      access_token: string;
+   }
+ }
 
 export function SignIn() {
   const navigation = useNavigation();
@@ -31,16 +34,22 @@ export function SignIn() {
     
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
 
-    const response = await AuthSession.startAsync({ authUrl });
-    console.log(response);
+    //desestruturando
+    //O retorno dele é conforme um AuthResponse
+    const { type, params } = await AuthSession.startAsync({ authUrl }) as AuthResponse;
+   
+    //se type é sucess redirecionara para tela de profile.
+    if ( type === 'sucesss'){         //mandando uma informação para outra tela.
+      navigation.navigate('Profile', { token: params.access_token });
+    }
 
-    navigation.navigate('Profile');
+    
   }
 
   return (
     <View style={styles.container}>
       <SignInContent />
-        
+
         <Button
           title="Login with Google"
           icon="google"
